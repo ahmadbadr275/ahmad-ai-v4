@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ahmad AI v4</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Ahmad AI v4 🤖</h1>
+
+<div id="controls">
+  <input id="colorInput" placeholder="Type color (red, blue, green)">
+  <button onclick="changeColor()">Change Background</button>
+</div>
+
+<div id="chatBox"></div>
+<input id="userInput" placeholder="Say something">
+<button onclick="sendMessage()">Send</button>
+
+<br><br>
+<button onclick="showChess()">Play Chess</button>
+
+<div id="chess" style="display:none;">
+  <iframe src="https://lichess.org/embed/game" width="400" height="400"></iframe>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
