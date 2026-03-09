@@ -1,16 +1,45 @@
-<!
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Ahmad AI</title>
+
+<!-- Favicon using Base64 embedded logo -->
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAADDPmHLAAABeElEQVR4nO3QsQkAMAzAsPz/02KgFEg3m8syHn+MwsAAAAAAAAAAAAAAAAgCz2aB8AAAAAAACAdG2fAAAAAAAAgN5GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACA3YRtAAAAAAAAgN2GbQAAAAAAACwPyfx2FwV2nNj0AAAAASUVORK5CYII=">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<h1>Ahmad AI 🤖</h1>
+
+<div class="controls">
+
+<input id="colorInput" placeholder="Type a color">
+<button onclick="changeBackground()">Change Background</button>
+
+<button onclick="startChat()">Start Chat</button>
+<button onclick="clearChat()">Clear Chat</button>
+
+</div>
 
 <div id="chatBox"></div>
 
-<input id="userInput" placeholder="Ask Ahmad AI something">
+<div class="inputArea">
+
+<input id="userInput" placeholder="Ask something..." onkeypress="enterSend(event)">
 <button onclick="sendMessage()">Send</button>
 
-<br><br>
+</div>
 
-<button onclick="showChess()">Play Chess</button>
+<div class="imageGen">
 
-<div id="chess" style="display:none;">
-<iframe src="https://lichess.org/embed/game" width="400" height="400"></iframe>
+<input id="imagePrompt" placeholder="Generate image (example: space)">
+<button onclick="generateImage()">Generate Photo</button>
+
 </div>
 
 <script src="script.js"></script>
