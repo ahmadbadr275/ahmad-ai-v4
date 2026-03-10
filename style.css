@@ -1,114 +1,93 @@
-body{
-
-font-family:Arial;
-text-align:center;
-margin:0;
-padding:20px;
-background-color:#f0f0f0;
-
-/* logo background */
-
-background-image:url("logo.png");
-background-repeat:no-repeat;
-background-position:center 60px;
-background-size:180px;
-
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  background: #f0f0f0;
 }
 
-h1{
-margin-top:150px;
+.chatLogo {
+  display: block;
+  margin: 0 auto 20px auto;
+  width: 120px;
+  height: auto;
 }
 
-.controls{
-margin-bottom:15px;
+#chatBox {
+  width: 800px;
+  height: 500px;
+  margin: auto;
+  border: 1px solid #ccc;
+  overflow-y: auto;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-#chatBox{
-
-width:420px;
-height:320px;
-
-margin:auto;
-
-border:1px solid #ccc;
-
-overflow-y:auto;
-
-padding:10px;
-
-background:white;
-
-border-radius:12px;
-
-display:flex;
-flex-direction:column;
-
+.message {
+  padding: 10px 14px;
+  margin: 6px;
+  border-radius: 12px;
+  max-width: 70%;
+  font-size: 15px;
+  word-wrap: break-word;
 }
 
-.message{
-
-padding:8px 12px;
-
-margin:5px;
-
-border-radius:10px;
-
-max-width:70%;
-
-font-size:14px;
-
+.user {
+  background: #4CAF50;
+  color: white;
+  align-self: flex-end;
 }
 
-.user{
-
-background:#4CAF50;
-color:white;
-
-align-self:flex-end;
-
+.ai {
+  background: #e4e4e4;
+  align-self: flex-start;
 }
 
-.ai{
-
-background:#e4e4e4;
-
-align-self:flex-start;
-
+#userControls {
+  margin-top: 10px;
 }
 
-.inputArea{
-
-margin-top:10px;
-
+input[type="text"] {
+  padding: 10px;
+  width: 260px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-input{
-
-padding:8px;
-width:220px;
-
-border-radius:6px;
-
-border:1px solid #ccc;
-
+button {
+  padding: 10px 14px;
+  cursor: pointer;
+  border: none;
+  background: #3498db;
+  color: white;
+  border-radius: 6px;
+  margin: 3px;
+  transition: background 0.2s;
 }
 
-button{
-
-padding:8px 10px;
-
-cursor:pointer;
-
-border:none;
-
-background:#3498db;
-
-color:white;
-
-border-radius:6px;
-
+button:hover {
+  background: #2980b9;
 }
 
-button:hover{
+#chessArea {
+  margin-top: 30px;
+  text-align: center;
+}
 
-background:#
+h2 {
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+input[type="color"] {
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
