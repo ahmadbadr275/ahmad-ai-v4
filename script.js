@@ -3,25 +3,38 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const colorPicker = document.getElementById("colorInput");
 
-// ---------- REPLIES ----------
+// ---------- REPLIES WITH SAFE TYPO/SYNONYM SUPPORT ----------
 const replies = {
   // English
   "hi":"Hello!",
+  "hii":"Hello!",           // typo
   "hello":"Hi there!",
   "hey":"Hey!",
   "ok":"Ok",
+  "wok":"Ok",               // typo
   "thanks":"You're welcome!",
   "thank you":"No problem!",
+  "thx":"No problem!",      // synonym
   "bye":"Goodbye!",
+  "goodbye":"See you later!",
+  "yes":"Great!",
+  "yess":"Great!",           // typo
+  "no":"Alright.",
+  "noo":"Alright.",          // typo
   "who are you":"I am Ahmad AI.",
   "play chess":"Opening chess board...",
-  
+
   // Arabic
   "مرحبا":"أهلاً!",
+  "أهلا":"أهلاً!",
+  "هلا":"أهلاً!",
   "السلام عليكم":"وعليكم السلام!",
   "كيف حالك":"أنا بخير!",
+  "تمام":"أنا بخير!",
   "شكرا":"على الرحب والسعة!",
-  "مع السلامة":"إلى اللقاء!"
+  "شكرًا":"على الرحب والسعة!",
+  "مع السلامة":"إلى اللقاء!",
+  "باي":"إلى اللقاء!"
 };
 
 // ---------- FALLBACKS ----------
@@ -37,13 +50,13 @@ function startChat() {
 async function sendMessage() {
   let text = userInput.value.trim();
   if (text === "") return;
-  
+
   addMessage("user", text);
   let clean = text.toLowerCase();
 
   // --- Check math ---
-  let mathResult = checkMath(clean);
-  if (mathResult) {
+  let mathResult = safeMath(clean);
+  if (mathResult !== null) {
     typingEffect(mathResult);
     userInput.value = "";
     return;
@@ -74,7 +87,7 @@ async function sendMessage() {
     }
   }
 
-  // --- Typing animation with thinking delay ---
+  // --- Typing animation ---
   setTimeout(() => { typingEffect(reply); }, 500);
 
   if (clean.includes("play chess")) embedChess();
@@ -98,60 +111,36 @@ function addMessage(type, text) {
 function typingEffect(reply) {
   let msg = document.createElement("div");
   msg.classList.add("message", "ai");
-
-  // Typing dots animation
   msg.innerHTML = `<div class="typing"><span></span><span></span><span></span></div>`;
-
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
-
-  setTimeout(() => {
-    msg.innerText = reply;
-  }, 1000);
+  setTimeout(() => { msg.innerText = reply; }, 1000);
 }
 
 // ---------- CLEAR CHAT ----------
-function clearChat() {
-  chatBox.innerHTML = "";
-}
+function clearChat() { chatBox.innerHTML = ""; }
 
 // ---------- CHANGE BACKGROUND ----------
-function changeBackground() {
-  document.body.style.backgroundColor = colorPicker.value;
-}
+function changeBackground() { document.body.style.backgroundColor = colorPicker.value; }
 
-// ---------- MATH CHECK ----------
-function checkMath(text) {
-  let mathText = text
-    .replace("what is", "")
-    .replace("plus", "+")
-    .replace("minus", "-")
-    .replace("times", "*")
-    .replace("multiplied by", "*")
-    .replace("x", "*")
-    .replace("divided by", "/")
-    .replace("over", "/");
-
-  if (/^[0-9+\-*/().\s]+$/.test(mathText)) {
-    try {
-      return "Answer: " + eval(mathText);
-    } catch {
-      return null;
+// ---------- SAFE MATH PARSER ----------
+function safeMath(text) {
+  try {
+    let expr = text.replace("what is","").replace(/plus/g,"+").replace(/minus/g,"-")
+                   .replace(/times|multiplied by|x/g,"*")
+                   .replace(/divided by|over/g,"/");
+    expr = expr.replace(/[^0-9+\-*/().\s]/g,"");
+    if (/^[0-9+\-*/().\s]+$/.test(expr)) {
+      return "Answer: " + Function('"use strict";return ('+expr+')')();
     }
-  }
+  } catch { return null; }
   return null;
 }
 
 // ---------- WIKIPEDIA SEARCH ----------
 async function searchWikipedia(question) {
-  let query = question
-    .replace("who is", "")
-    .replace("what is", "")
-    .replace("tell me about", "")
-    .trim();
-
+  let query = question.replace("who is","").replace("what is","").replace("tell me about","").trim();
   const url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(query);
-
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -166,7 +155,6 @@ async function searchWikipedia(question) {
 function embedChess() {
   const old = document.getElementById("chessFrame");
   if (old) old.remove();
-
   let iframe = document.createElement("iframe");
   iframe.id = "chessFrame";
   iframe.src = "https://www.chess.com/play/computer";
@@ -174,7 +162,6 @@ function embedChess() {
   iframe.style.height = "650px";
   iframe.style.border = "none";
   iframe.style.marginTop = "15px";
-
   chatBox.appendChild(iframe);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
