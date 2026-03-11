@@ -76,10 +76,12 @@ async function sendMessage() {
     }
   }
 
-  // --- Wikipedia search ---
+  // --- Wikipedia search only for proper questions ---
   if (!reply) {
-    if (clean.startsWith("who is") || clean.startsWith("what is") || clean.startsWith("tell me about") ||
-        clean.startsWith("من هو") || clean.startsWith("ما هو") || clean.startsWith("حدثني عن")) {
+    const wikiKeywordsEN = ["who is","what is","tell me about"];
+    const wikiKeywordsAR = ["من هو","ما هو","حدثني عن"];
+    let useWiki = wikiKeywordsEN.some(k => clean.startsWith(k)) || wikiKeywordsAR.some(k => clean.startsWith(k));
+    if (useWiki) {
       reply = await searchWikipedia(clean);
     }
   }
@@ -152,7 +154,8 @@ function safeMath(text) {
   return null;
 }
 
-/* ---------- WIKIPEDIA SEARCH (EN + AR) ---------- */
+/* ---------- WIKIPEDIA SEARCH (EN + AR) ----------
+   Only for "who/what/tell me about ..." type questions */
 async function searchWikipedia(question) {
   let query = question
     .replace(/who is|what is|tell me about|من هو|ما هو|حدثني عن/gi,"")
