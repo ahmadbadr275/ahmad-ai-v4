@@ -57,7 +57,7 @@ async function sendMessage() {
   if (text === "") return;
 
   addMessage("user", text);
-  let clean = text.toLowerCase();
+  let clean = text.toLowerCase().replace(/[?.!,]/g, "");
 
   // --- Check math ---
   let mathResult = safeMath(clean);
@@ -155,10 +155,11 @@ function safeMath(text) {
 }
 
 /* ---------- WIKIPEDIA SEARCH (EN + AR) ----------
-   Only for "who/what/tell me about ..." type questions */
+   Improved: removes 'a', 'an', 'the' before searching */
 async function searchWikipedia(question) {
   let query = question
     .replace(/who is|what is|tell me about|من هو|ما هو|حدثني عن/gi,"")
+    .replace(/\b(a|an|the)\b/gi,"") // remove English articles
     .trim();
 
   const isArabic = /[ء-ي]/.test(query);
