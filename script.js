@@ -5,46 +5,43 @@ const colorPicker = document.getElementById("colorInput");
 
 /* ---------- REPLIES WITH EMOJIS ---------- */
 const replies = {
-  // English greetings & small talk
-  "hi":"Hello! 👋",
-  "hii":"Hello! 👋",
-  "hello":"Hi there! 🙂",
-  "hey":"Hey! 😃",
-  "how are you":"I'm good, thank you! 🙂",
-  "how r u":"I'm good, thank you! 🙂",
-  "how are u":"I'm good, thank you! 🙂",
-  "what's up":"Not much, just chatting with you! 😄",
-  "thanks":"You're welcome! 🙏",
-  "thank you":"No problem! 👍",
-  "thx":"No problem! 👍",
-  "ok":"Ok ✅",
-  "wok":"Ok ✅",
-  "yes":"Great! 🎉",
-  "yess":"Great! 🎉",
-  "no":"Alright. ⚠️",
-  "noo":"Alright. ⚠️",
-  "bye":"Goodbye! 👋",
-  "goodbye":"See you later! 👋",
-  "who are you":"I am Ahmad AI 🤖",
-  "play chess":"Opening chess board... ♟️",
-
-  // Arabic greetings & small talk
-  "مرحبا":"أهلاً! 👋",
-  "أهلا":"أهلاً! 👋",
-  "هلا":"أهلاً! 👋",
-  "السلام عليكم":"وعليكم السلام! ✋",
-  "كيف حالك":"أنا بخير! 🙂",
-  "كيف الحال":"أنا بخير! 🙂",
-  "تمام":"أنا بخير! 🙂",
-  "شكرا":"على الرحب والسعة! 🙏",
-  "شكرًا":"على الرحب والسعة! 🙏",
-  "مع السلامة":"إلى اللقاء! 👋",
-  "باي":"إلى اللقاء! 👋"
+  "hi": "Hello! 👋",
+  "hii": "Hello! 👋",
+  "hello": "Hi there! 🙂",
+  "hey": "Hey! 😃",
+  "how are you": "I'm good, thank you! 🙂",
+  "how r u": "I'm good, thank you! 🙂",
+  "how are u": "I'm good, thank you! 🙂",
+  "what's up": "Not much, just chatting with you! 😄",
+  "thanks": "You're welcome! 🙏",
+  "thank you": "No problem! 👍",
+  "thx": "No problem! 👍",
+  "ok": "Ok ✅",
+  "wok": "Ok ✅",
+  "yes": "Great! 🎉",
+  "yess": "Great! 🎉",
+  "no": "Alright. ⚠️",
+  "noo": "Alright. ⚠️",
+  "bye": "Goodbye! 👋",
+  "goodbye": "See you later! 👋",
+  "who are you": "I am Ahmad AI 🤖",
+  "play chess": "Opening chess board... ♟️",
+  "مرحبا": "أهلاً! 👋",
+  "أهلا": "أهلاً! 👋",
+  "هلا": "أهلاً! 👋",
+  "السلام عليكم": "وعليكم السلام! ✋",
+  "كيف حالك": "أنا بخير! 🙂",
+  "كيف الحال": "أنا بخير! 🙂",
+  "تمام": "أنا بخير! 🙂",
+  "شكرا": "على الرحب والسعة! 🙏",
+  "شكرًا": "على الرحب والسعة! 🙏",
+  "مع السلامة": "إلى اللقاء! 👋",
+  "باي": "إلى اللقاء! 👋"
 };
 
 /* ---------- FALLBACKS ---------- */
-const fallbackEN = ["I don't know that yet. 🤔","Interesting! Tell me more…","Can you explain differently?"];
-const fallbackAR = ["لا أعرف ذلك بعد. 🤔","مثير للاهتمام، أخبرني أكثر…"];
+const fallbackEN = ["I don't know that yet. 🤔", "Interesting! Tell me more…", "Can you explain differently?"];
+const fallbackAR = ["لا أعرف ذلك بعد. 🤔", "مثير للاهتمام، أخبرني أكثر…"];
 
 /* ---------- START CHAT ---------- */
 function startChat() {
@@ -59,7 +56,6 @@ async function sendMessage() {
   addMessage("user", text);
   let clean = text.toLowerCase().replace(/[?.!,]/g, "");
 
-  // --- Check math ---
   let mathResult = safeMath(clean);
   if (mathResult !== null) {
     typingEffect(mathResult);
@@ -67,7 +63,6 @@ async function sendMessage() {
     return;
   }
 
-  // --- Predefined replies ---
   let reply = null;
   for (let key in replies) {
     if (clean.includes(key)) {
@@ -76,30 +71,25 @@ async function sendMessage() {
     }
   }
 
-  // --- Wikipedia search only for proper questions ---
   if (!reply) {
-    const wikiKeywordsEN = ["who is","what is","tell me about"];
-    const wikiKeywordsAR = ["من هو","ما هو","حدثني عن"];
-    let useWiki = wikiKeywordsEN.some(k => clean.startsWith(k)) || wikiKeywordsAR.some(k => clean.startsWith(k));
-    if (useWiki) {
+    const wikiTriggersEN = ["who is", "what is", "tell me about"];
+    const wikiTriggersAR = ["من هو", "ما هو", "حدثني عن"];
+    const shouldWiki = wikiTriggersEN.some(k => clean.startsWith(k)) ||
+                       wikiTriggersAR.some(k => clean.startsWith(k));
+    if (shouldWiki) {
       reply = await searchWikipedia(clean);
     }
   }
 
-  // --- Fallback messages ---
   if (!reply) {
-    if (/[ء-ي]/.test(clean)) {
-      reply = fallbackAR[Math.floor(Math.random() * fallbackAR.length)];
-    } else {
-      reply = fallbackEN[Math.floor(Math.random() * fallbackEN.length)];
-    }
+    reply = /[ء-ي]/.test(clean) ?
+      fallbackAR[Math.floor(Math.random() * fallbackAR.length)] :
+      fallbackEN[Math.floor(Math.random() * fallbackEN.length)];
   }
 
-  // --- Typing animation ---
   setTimeout(() => { typingEffect(reply); }, 500);
 
   if (clean.includes("play chess") || clean.includes("شطرنج")) embedChess();
-
   userInput.value = "";
 }
 
@@ -107,9 +97,7 @@ async function sendMessage() {
 function addMessage(type, text) {
   let msg = document.createElement("div");
   msg.classList.add("message", type);
-
   if (/[ء-ي]/.test(text)) msg.style.direction = "rtl";
-
   msg.innerText = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
@@ -131,49 +119,62 @@ function clearChat() { chatBox.innerHTML = ""; }
 /* ---------- CHANGE BACKGROUND ---------- */
 function changeBackground() { document.body.style.backgroundColor = colorPicker.value; }
 
-/* ---------- SAFE MATH PARSER (EN + AR) ---------- */
+/* ---------- SAFE MATH PARSER ---------- */
 function safeMath(text) {
   try {
-    let expr = text.toLowerCase()
-      .replace("what is","")
-      .replace("plus","+")
-      .replace("minus","-")
-      .replace(/times|multiplied by|x/g,"*")
-      .replace(/divided by|over/g,"/")
-      // Arabic math
-      .replace(/زائد/g,"+")
-      .replace(/ناقص/g,"-")
-      .replace(/ضرب|×/g,"*")
-      .replace(/قسمة|÷/g,"/");
-    
-    expr = expr.replace(/[^0-9+\-*/().\s]/g,""); // remove unsafe chars
+    let expr = text
+      .replace("what is", "")
+      .replace("plus", "+")
+      .replace("minus", "-")
+      .replace(/times|multiplied by|x/g, "*")
+      .replace(/divided by|over/g, "/")
+      .replace(/زائد/g, "+")
+      .replace(/ناقص/g, "-")
+      .replace(/ضرب|×/g, "*")
+      .replace(/قسمة|÷/g, "/");
+    expr = expr.replace(/[^0-9+\-*/().\s]/g, "");
     if (/^[0-9+\-*/().\s]+$/.test(expr)) {
-      return "Answer: " + Function('"use strict";return ('+expr+')')();
+      return "Answer: " + Function('"use strict";return (' + expr + ')')();
     }
   } catch { return null; }
   return null;
 }
 
-/* ---------- WIKIPEDIA SEARCH (EN + AR) ----------
-   Improved: removes 'a', 'an', 'the' before searching */
+/* ---------- WIKIPEDIA SEARCH WITH FALLBACK ---------- */
 async function searchWikipedia(question) {
   let query = question
-    .replace(/who is|what is|tell me about|من هو|ما هو|حدثني عن/gi,"")
-    .replace(/\b(a|an|the)\b/gi,"") // remove English articles
+    .replace(/who is|what is|tell me about|من هو|ما هو|حدثني عن/gi, "")
+    .replace(/\b(a|an|the)\b/gi, "")
     .trim();
 
   const isArabic = /[ء-ي]/.test(query);
-  const url = (isArabic ? "https://ar.wikipedia.org/api/rest_v1/page/summary/" : "https://en.wikipedia.org/api/rest_v1/page/summary/") 
-              + encodeURIComponent(query);
+  const lang = isArabic ? "ar" : "en";
 
+  // try summary directly
+  const summaryUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    let response = await fetch(summaryUrl);
+    let data = await response.json();
     if (data.extract) return data.extract;
-    return isArabic ? "لم أتمكن من العثور على معلومات." : "I couldn't find information.";
-  } catch {
-    return isArabic ? "حدث خطأ في البحث." : "Error searching.";
-  }
+  } catch {}
+
+  // fallback: search for best title
+  try {
+    const searchUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
+    let res2 = await fetch(searchUrl);
+    let json = await res2.json();
+    if (json.query && json.query.search && json.query.search.length > 0) {
+      let bestTitle = json.query.search[0].title;
+      const bestUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestTitle)}`;
+      let resp3 = await fetch(bestUrl);
+      let bestData = await resp3.json();
+      if (bestData.extract) return bestData.extract;
+    }
+  } catch {}
+
+  return isArabic ?
+    "لم أتمكن من العثور على معلومات." :
+    "I couldn't find information.";
 }
 
 /* ---------- EMBED CHESS ---------- */
