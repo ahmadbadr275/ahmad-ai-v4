@@ -14,20 +14,20 @@
   </header>
 
   <!-- Chat container -->
-  <div class="chat-container">
+  <main class="chat-container">
     <div id="chatBox" class="chat-box"></div>
     <input type="text" id="userInput" placeholder="Type a message..." onkeydown="enterSend(event)">
     <div class="buttons">
-      <button onclick="sendMessage()">Send</button>
-      <button onclick="clearChat()">Clear</button>
+      <button type="button" onclick="sendMessage()">Send</button>
+      <button type="button" onclick="clearChat()">Clear</button>
       <input type="color" id="colorInput" onchange="changeBackground()" title="Pick background color">
     </div>
-  </div>
+  </main>
 
   <!-- Note under chat -->
-  <div class="chat-note">
+  <footer class="chat-note">
     Ahmad AI can make mistakes.
-  </div>
+  </footer>
 
   <!-- Scripts -->
   <script src="script.js"></script>
@@ -42,5 +42,6 @@
       }
     }
   </script>
+
 </body>
 </html>
