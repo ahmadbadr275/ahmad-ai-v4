@@ -1,217 +1,56 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ahmad AI Chat</title>
-<style>
-  body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
-  header {
-      text-align: center;
-      padding: 20px;
-      background-color: #222;
-      color: white;
-      width: 100%;
-  }
-  header .logo {
-      width: 100px;
-      height: auto;
-      display: block;
-      margin: 0 auto 10px auto;
-  }
-  .chat-container {
-      width: 90%;
-      max-width: 600px;
-      margin-top: 20px;
-  }
-  #chatBox {
-      height: 400px;
-      overflow-y: auto;
-      background-color: white;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-  }
-  #userInput {
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-      font-size: 16px;
-  }
-  .buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-  }
-  button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-  }
-  input[type="color"] {
-      width: 50px;
-      height: 40px;
-      border: none;
-      cursor: pointer;
-  }
-  .message { margin:5px 0; padding:5px; border-radius:5px; }
-  .user { background-color: #d1e7dd; align-self: flex-end; }
-  .ai { background-color: #f8d7da; align-self: flex-start; }
-  iframe { margin-top: 10px; }
-</style>
+
+<title>Ahmad AI</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
-<body>
+
+<body onload="startChat()">
 
 <header>
-  <!-- Inline SVG logo -->
-  <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <circle cx="32" cy="32" r="30" fill="#4CAF50"/>
-    <text x="32" y="38" font-size="20" text-anchor="middle" fill="white" font-family="Arial">AI</text>
-  </svg>
-  <h1>Ahmad AI</h1>
+
+<h1>Ahmad AI</h1>
+
 </header>
 
 <div class="chat-container">
-  <div id="chatBox"></div>
-  <input type="text" id="userInput" placeholder="Type a message...">
-  <div class="buttons">
-    <button id="sendBtn">Send</button>
-    <button id="clearBtn">Clear</button>
-    <input type="color" id="colorInput" title="Pick background color">
-  </div>
+
+<div id="chatBox" class="chat-box"></div>
+
+<input
+type="text"
+id="userInput"
+placeholder="Type a message..."
+onkeydown="enterSend(event)"
+>
+
+<div class="buttons">
+
+<button onclick="sendMessage()">Send</button>
+
+<button onclick="clearChat()">Clear</button>
+
+<input
+type="color"
+id="colorInput"
+title="Change background"
+onchange="changeBackground()"
+>
+
 </div>
 
-<script>
-const chatBox = document.getElementById("chatBox");
-const userInput = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
-const clearBtn = document.getElementById("clearBtn");
-const colorPicker = document.getElementById("colorInput");
+</div>
 
-const replies = {
-  "hi":"Hello!",
-  "hello":"Hi there!",
-  "hey":"Hey!",
-  "good morning":"Good morning!",
-  "good afternoon":"Good afternoon!",
-  "good evening":"Good evening!",
-  "ok":"Alright ✅",
-  "alright":"Okay!",
-  "thanks":"You're welcome!",
-  "thank you":"No problem!",
-  "bye":"Goodbye!",
-  "goodbye":"See you later!",
-  "yes":"Great!",
-  "no":"Alright.",
-  "who are you":"I am Ahmad AI, a simple web chatbot.",
-  "who is newton":"Isaac Newton was a scientist who discovered gravity and developed the laws of motion.",
-  "who is einstein":"Albert Einstein was a physicist famous for the theory of relativity.",
-  "what is ai":"AI means Artificial Intelligence.",
-  "what is gravity":"Gravity is the force that pulls objects toward each other.",
-  "what is the sun":"The Sun is the star at the center of our solar system.",
-  "what is earth":"Earth is the planet we live on.",
-  "what is mars":"Mars is the fourth planet from the Sun.",
-  "play chess":"Opening chess board..."
-};
-
-const fallbackReplies = [
-  "I don't know that yet, but I'm learning.",
-  "Can you explain that differently?",
-  "Interesting! Tell me more."
-];
-
-// EVENTS
-sendBtn.addEventListener("click", sendMessage);
-clearBtn.addEventListener("click", clearChat);
-colorPicker.addEventListener("change", changeBackground);
-userInput.addEventListener("keydown", function(e){ if(e.key==="Enter") sendMessage(); });
-
-// CHAT FUNCTIONS
-function startChat(){
-  addMessage("ai","Hello! How can i help you today.");
-}
-
-function sendMessage(){
-  let text = userInput.value.trim();
-  if(text==="") return;
-  addMessage("user", text);
-
-  let reply = checkMath(text);
-  if(!reply) reply = findReply(text);
-
-  typingEffect(reply);
-
-  if(text.toLowerCase().includes("play chess")) embedChess();
-
-  userInput.value="";
-}
-
-function addMessage(type,text){
-  let msg = document.createElement("div");
-  msg.classList.add("message", type);
-  msg.innerText = text;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function typingEffect(reply){
-  let msg = document.createElement("div");
-  msg.classList.add("message","ai");
-  msg.innerText="Typing...";
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-  setTimeout(()=>{ msg.innerText=reply; }, 600);
-}
-
-function clearChat(){ chatBox.innerHTML=""; }
-function changeBackground(){ document.body.style.backgroundColor = colorPicker.value; }
-
-// MATH
-function checkMath(text){
-  text = text.toLowerCase().replace("what is","").replace("what's","").replace("what’s","").trim();
-  text = text.replace(/plus/g,"+").replace(/minus/g,"-").replace(/times/g,"*")
-             .replace(/multiplied by/g,"*").replace(/x/g,"*").replace(/divided by/g,"/").replace(/over/g,"/");
-  if(/^[0-9+\-*/().\s]+$/.test(text)){
-    try{ return `Answer: ${eval(text)}` }catch(e){ return null; }
-  }
-  return null;
-}
-
-// REPLIES
-function findReply(text){
-  text = text.toLowerCase().replace(/[?.!,]/g,"");
-  for(let key in replies) if(text.includes(key)) return replies[key];
-  return fallbackReplies[Math.floor(Math.random()*fallbackReplies.length)];
-}
-
-// CHESS
-function embedChess(){
-  const old = document.getElementById("chessFrame");
-  if(old) old.remove();
-  let iframe = document.createElement("iframe");
-  iframe.id = "chessFrame";
-  iframe.src = "https://www.chess.com/play/computer";
-  iframe.style.width="100%"; 
-  iframe.style.height="650px";
-  iframe.style.border="none"; 
-  iframe.style.borderRadius="10px"; 
-  iframe.style.marginTop="15px";
-  chatBox.appendChild(iframe);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// Start chat
-startChat();
-</script>
+<script src="script.js"></script>
 
 </body>
+
 </html>
