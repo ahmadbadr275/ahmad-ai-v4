@@ -1,35 +1,40 @@
-// ---------- ELEMENTS ----------
+/* ---------- ELEMENTS ---------- */
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const colorPicker = document.getElementById("colorInput");
 
-// ---------- REPLIES WITH EMOJIS ----------
+/* ---------- REPLIES WITH EMOJIS ---------- */
 const replies = {
-  // English
+  // English greetings & small talk
   "hi":"Hello! 👋",
   "hii":"Hello! 👋",
   "hello":"Hi there! 🙂",
   "hey":"Hey! 😃",
-  "ok":"Ok ✅",
-  "wok":"Ok ✅",
+  "how are you":"I'm good, thank you! 🙂",
+  "how r u":"I'm good, thank you! 🙂",
+  "how are u":"I'm good, thank you! 🙂",
+  "what's up":"Not much, just chatting with you! 😄",
   "thanks":"You're welcome! 🙏",
   "thank you":"No problem! 👍",
   "thx":"No problem! 👍",
-  "bye":"Goodbye! 👋",
-  "goodbye":"See you later! 👋",
+  "ok":"Ok ✅",
+  "wok":"Ok ✅",
   "yes":"Great! 🎉",
   "yess":"Great! 🎉",
   "no":"Alright. ⚠️",
   "noo":"Alright. ⚠️",
+  "bye":"Goodbye! 👋",
+  "goodbye":"See you later! 👋",
   "who are you":"I am Ahmad AI 🤖",
   "play chess":"Opening chess board... ♟️",
 
-  // Arabic
+  // Arabic greetings & small talk
   "مرحبا":"أهلاً! 👋",
   "أهلا":"أهلاً! 👋",
   "هلا":"أهلاً! 👋",
   "السلام عليكم":"وعليكم السلام! ✋",
   "كيف حالك":"أنا بخير! 🙂",
+  "كيف الحال":"أنا بخير! 🙂",
   "تمام":"أنا بخير! 🙂",
   "شكرا":"على الرحب والسعة! 🙏",
   "شكرًا":"على الرحب والسعة! 🙏",
@@ -37,16 +42,16 @@ const replies = {
   "باي":"إلى اللقاء! 👋"
 };
 
-// ---------- FALLBACKS ----------
+/* ---------- FALLBACKS ---------- */
 const fallbackEN = ["I don't know that yet. 🤔","Interesting! Tell me more…","Can you explain differently?"];
 const fallbackAR = ["لا أعرف ذلك بعد. 🤔","مثير للاهتمام، أخبرني أكثر…"];
 
-// ---------- START CHAT ----------
+/* ---------- START CHAT ---------- */
 function startChat() {
   addMessage("ai", "Hello! مرحبا! 👋");
 }
 
-// ---------- SEND MESSAGE ----------
+/* ---------- SEND MESSAGE ---------- */
 async function sendMessage() {
   let text = userInput.value.trim();
   if (text === "") return;
@@ -96,7 +101,7 @@ async function sendMessage() {
   userInput.value = "";
 }
 
-// ---------- ADD MESSAGE ----------
+/* ---------- ADD MESSAGE ---------- */
 function addMessage(type, text) {
   let msg = document.createElement("div");
   msg.classList.add("message", type);
@@ -108,7 +113,7 @@ function addMessage(type, text) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// ---------- TYPING EFFECT ----------
+/* ---------- TYPING EFFECT ---------- */
 function typingEffect(reply) {
   let msg = document.createElement("div");
   msg.classList.add("message", "ai");
@@ -118,13 +123,13 @@ function typingEffect(reply) {
   setTimeout(() => { msg.innerText = reply; }, 1000);
 }
 
-// ---------- CLEAR CHAT ----------
+/* ---------- CLEAR CHAT ---------- */
 function clearChat() { chatBox.innerHTML = ""; }
 
-// ---------- CHANGE BACKGROUND ----------
+/* ---------- CHANGE BACKGROUND ---------- */
 function changeBackground() { document.body.style.backgroundColor = colorPicker.value; }
 
-// ---------- SAFE MATH PARSER (EN + AR) ----------
+/* ---------- SAFE MATH PARSER (EN + AR) ---------- */
 function safeMath(text) {
   try {
     let expr = text.toLowerCase()
@@ -147,7 +152,7 @@ function safeMath(text) {
   return null;
 }
 
-// ---------- WIKIPEDIA SEARCH (EN + AR) ----------
+/* ---------- WIKIPEDIA SEARCH (EN + AR) ---------- */
 async function searchWikipedia(question) {
   let query = question
     .replace(/who is|what is|tell me about|من هو|ما هو|حدثني عن/gi,"")
@@ -167,7 +172,7 @@ async function searchWikipedia(question) {
   }
 }
 
-// ---------- EMBED CHESS ----------
+/* ---------- EMBED CHESS ---------- */
 function embedChess() {
   const old = document.getElementById("chessFrame");
   if (old) old.remove();
@@ -182,7 +187,7 @@ function embedChess() {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// ---------- ENTER KEY SEND ----------
+/* ---------- ENTER KEY SEND ---------- */
 function enterSend(e) {
   if (e.key === "Enter") sendMessage();
 }
