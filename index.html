@@ -3,35 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ahmad AI Chat</title>
+  <title>Ahmad AI Chat & Chess</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Chess Libraries -->
+  <!-- Chessboard CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+
+  <!-- Your styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body onload="startChat()">
 
-  <header>
-    <h1>Ahmad AI 🤖</h1>
-  </header>
+<header>
+  <h1>Ahmad AI Chat & Chess</h1>
+</header>
 
-  <div class="chat-container">
-    <div id="chatBox" class="chat-box"></div>
-    <input type="text" id="userInput" placeholder="Type a message..." onkeydown="enterSend(event)">
-    <div class="buttons">
-      <button onclick="sendMessage()">Send</button>
-      <button onclick="clearChat()">Clear</button>
-      <input type="color" id="colorInput" onchange="changeBackground()" title="Pick background color">
-    </div>
+<div class="chat-container">
+  <div id="chatBox"></div>
+  <input type="text" id="userInput" placeholder="Type a message..." onkeydown="enterSend(event)">
+  <div class="buttons">
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="clearChat()">Clear</button>
+    <input type="color" id="colorInput" onchange="changeBackground()" title="Pick background color">
   </div>
+</div>
 
-  <div id="chessBoardContainer" style="width:100%; max-width:500px; margin:20px auto;"></div>
+<div id="chessBoardContainer"></div>
 
-  <!-- JS -->
-  <script src="script.js"></script>
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+
+<!-- Stockfish WebAssembly -->
+<script src="stockfish.wasm.js"></script>
+
+<!-- Your JS -->
+<script src="script.js"></script>
+
 </body>
 </html>
