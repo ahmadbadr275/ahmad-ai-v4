@@ -3,7 +3,9 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const colorPicker = document.getElementById("colorInput");
 
+// Predefined replies: English + Arabic
 const replies = {
+  // English
   "hi":"Hello 👋",
   "hello":"Hi there 🙂",
   "hey":"Hey!",
@@ -15,21 +17,29 @@ const replies = {
   "thank you":"No problem 👍",
   "bye":"Goodbye 👋",
   "who are you":"I am Ahmad AI 🤖",
+
+  // Arabic
   "مرحبا":"أهلاً 👋",
   "السلام عليكم":"وعليكم السلام",
   "كيف حالك":"أنا بخير 🙂",
   "شكرا":"على الرحب والسعة",
-  "مع السلامة":"إلى اللقاء 👋"
+  "مع السلامة":"إلى اللقاء 👋",
+  "أهلا":"أهلاً 👋",
+  "كيف الحال":"أنا بخير 🙂",
+  "من أنت":"أنا أحمد AI 🤖"
 };
 
+// Fallbacks
 const fallbackEN = ["I couldn't find information.","Interesting question!","Try asking another way."];
 const fallbackAR = ["لم أجد معلومات عن ذلك","سؤال مثير للاهتمام"];
 
+// Chess variables
 let board = null;
 let game = new Chess();
 
+// ================== CHAT FUNCTIONS ==================
 function startChat(){
-  addMessage("ai","Hello! 👋 Ask me something.");
+  addMessage("ai","Hello! 👋 Ask me something or type 'play chess' / 'العب شطرنج'.");
 }
 
 async function sendMessage(){
@@ -70,17 +80,20 @@ async function sendMessage(){
 
   setTimeout(()=>typingEffect(reply),500);
 
-  // Chess trigger
-  if(clean.includes("play chess") || clean.includes("شطرنج")) initChess();
+  // Chess triggers (English + Arabic)
+  if(clean.includes("play chess") || clean.includes("شطرنج") || clean.includes("العب شطرنج")){
+    initChess();
+  }
 
   userInput.value="";
 }
 
+// Display messages with proper direction
 function addMessage(type,text){
   let msg = document.createElement("div");
   msg.classList.add("message",type);
-  if(/[ء-ي]/.test(text)) msg.style.direction="rtl";
-  msg.innerText=text;
+  msg.style.direction = /[ء-ي]/.test(text) ? "rtl" : "ltr";
+  msg.innerText = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -97,6 +110,7 @@ function typingEffect(reply){
 function clearChat(){ chatBox.innerHTML=""; }
 function changeBackground(){ document.body.style.backgroundColor=colorPicker.value; }
 
+// ================== MATH ==================
 function safeMath(text){
   try{
     let expr=text
@@ -117,6 +131,7 @@ function safeMath(text){
   return null;
 }
 
+// ================== WIKIPEDIA SEARCH ==================
 async function searchWikipedia(question){
   let query = question.replace(/who|what|where|when|why|how|which|define|tell me|is|are|ما|من|أين|متى|لماذا/gi,"").trim();
   let isArabic = /[ء-ي]/.test(query);
