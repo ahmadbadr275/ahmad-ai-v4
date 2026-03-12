@@ -3,7 +3,7 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const colorPicker = document.getElementById("colorInput");
 
-// Predefined replies: English + Arabic
+// Predefined replies
 const replies = {
   // English
   "hi":"Hello 👋",
@@ -17,7 +17,7 @@ const replies = {
   "thank you":"No problem 👍",
   "bye":"Goodbye 👋",
   "who are you":"I am Ahmad AI 🤖",
-
+  
   // Arabic
   "مرحبا":"أهلاً 👋",
   "السلام عليكم":"وعليكم السلام",
@@ -45,50 +45,49 @@ function startChat(){
 async function sendMessage(){
   let text = userInput.value.trim();
   if(text==="") return;
-  addMessage("user",text);
+  addMessage("user", text);
   let clean = text.toLowerCase().replace(/[?.!,]/g,"");
-  let reply = null;
 
-  // Math
-  let math = safeMath(clean);
-  if(math!==null){
-    typingEffect(math);
-    userInput.value="";
-    return;
+  // ---------- CHESS TRIGGER FIRST ----------
+  if(/\b(play chess|chess)\b/i.test(clean) ||
+     /شطرنج/.test(clean) ||
+     /العب شطرنج/.test(clean) ||
+     /ابدأ شطرنج/.test(clean)) {
+       initChess();
+       userInput.value = "";
+       return; // stop further replies
   }
 
-  // Predefined replies
+  let reply = null;
+
+  // ---------- PREDEFINED REPLIES ----------
   for(let key in replies){
     if(clean.includes(key)){ reply = replies[key]; break; }
   }
 
-  // Wikipedia triggers
-  const wikiTriggers = ["who","what","where","when","why","how","which","define","tell me","ما","من","أين","متى","لماذا"];
-  let useWiki = wikiTriggers.some(q=>clean.startsWith(q));
-  if(!reply && useWiki){
-    reply = await searchWikipedia(clean);
-  }
+  // ---------- MATH ----------
+  let math = safeMath(clean);
+  if(math !== null){ reply = math; }
 
-  // Fallback
+  // ---------- WIKIPEDIA ----------
+  const wikiTriggers = ["who","what","where","when","why","how","which","define","tell me","ما","من","أين","متى","لماذا"];
+  let useWiki = wikiTriggers.some(q => clean.startsWith(q));
+  if(!reply && useWiki){ reply = await searchWikipedia(clean); }
+
+  // ---------- FALLBACK ----------
   if(!reply){
     if(/[ء-ي]/.test(clean)){
       reply = fallbackAR[Math.floor(Math.random()*fallbackAR.length)];
-    }else{
+    } else {
       reply = fallbackEN[Math.floor(Math.random()*fallbackEN.length)];
     }
   }
 
-  setTimeout(()=>typingEffect(reply),500);
-
-  // Chess triggers (English + Arabic)
-  if(clean.includes("play chess") || clean.includes("شطرنج") || clean.includes("العب شطرنج")){
-    initChess();
-  }
-
-  userInput.value="";
+  setTimeout(()=>typingEffect(reply), 500);
+  userInput.value = "";
 }
 
-// Display messages with proper direction
+// Display messages with correct text direction
 function addMessage(type,text){
   let msg = document.createElement("div");
   msg.classList.add("message",type);
