@@ -34,7 +34,7 @@ const replies = {
 const fallbackEN = [
 "I couldn't find that information 🤔",
 "Interesting question!",
-"Try asking in another way"
+"Try asking another way"
 ];
 
 const fallbackAR = [
@@ -78,7 +78,7 @@ return;
 
 }
 
-/* ---------- PREDEFINED REPLIES ---------- */
+/* ---------- SIMPLE REPLIES ---------- */
 
 for(let key in replies){
 
@@ -125,7 +125,7 @@ let useWiki =
 wikiTriggersEN.some(q=>clean.startsWith(q)) ||
 wikiTriggersAR.some(q=>clean.startsWith(q));
 
-/* ---------- WIKIPEDIA ---------- */
+/* ---------- WIKIPEDIA SEARCH ---------- */
 
 if(!reply && useWiki){
 
@@ -251,63 +251,50 @@ return null;
 
 }
 
-/* ---------- WIKIPEDIA SEARCH ---------- */
+/* ---------- WIKIPEDIA FUNCTION ---------- */
 
 async function searchWikipedia(question){
 
 let query=question
-
 .replace(/who is|what is|what are|where is|when was|when did|which|why is|tell me about|define|من هو|ما هو|ما هي|متى|أين|لماذا|حدثني عن/gi,"")
-
 .replace(/\b(a|an|the)\b/gi,"")
-
 .trim();
 
 let isArabic=/[ء-ي]/.test(query);
 
 let lang=isArabic ? "ar":"en";
 
-/* DIRECT PAGE */
-
-try{
-
-let url=`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
-
-let res=await fetch(url);
-
-let data=await res.json();
-
-if(data.extract) return data.extract;
-
-}catch{}
-
-/* SEARCH FALLBACK */
-
 try{
 
 let searchURL=`https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
 
-let res2=await fetch(searchURL);
+let res=await fetch(searchURL);
 
-let json=await res2.json();
+let data=await res.json();
 
-if(json.query.search.length>0){
+if(data.query.search.length>0){
 
-let title=json.query.search[0].title;
+let title=data.query.search[0].title;
 
-let url2=`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`;
+let summaryURL=`https://${lang}.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&explaintext=true&titles=${encodeURIComponent(title)}&format=json&origin=*`;
 
-let res3=await fetch(url2);
+let res2=await fetch(summaryURL);
 
-let data2=await res3.json();
+let data2=await res2.json();
 
-if(data2.extract) return data2.extract;
+let page=Object.values(data2.query.pages)[0];
+
+if(page.extract) return page.extract;
 
 }
 
-}catch{}
+}catch(e){
 
-return isArabic ? "لم أتمكن من العثور على معلومات" : "I couldn't find information";
+console.error(e);
+
+}
+
+return isArabic ? "لم أجد معلومات عن ذلك" : "I couldn't find information.";
 
 }
 
